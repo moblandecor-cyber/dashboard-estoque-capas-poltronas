@@ -12,25 +12,25 @@ LOCAL_FILE_EXISTS  = os.path.exists(DEFAULT_FILE_PATH)
 GSHEETS_ID         = "1zP5wU3VvJxH7X-y3zeleUNOaOT2URTDswxoIJjbny08"
 GSHEETS_EXPORT_URL = f"https://docs.google.com/spreadsheets/d/{GSHEETS_ID}/export?format=xlsx"
 
-# ── Paleta Quente ──────────────────────────────────────────────────────────────
-TERRA   = "#C4522A"   # terracota  (principal)
-AMBER   = "#D4853A"   # âmbar
-COPPER  = "#B87333"   # cobre
-SAND    = "#D4A574"   # areia quente
-CHOCO   = "#3D1F0D"   # chocolate escuro
-SADDLE  = "#8B4513"   # marrom médio
-GOLD    = "#DAA520"   # dourado
-IVORY   = "#FDF6EE"   # fundo ivory
-PEACH   = "#F5D5B8"   # pêssego claro
-CREAM   = "#EDE0D0"   # creme
-SURFACE = "#FFFFFF"
-TEXT    = "#2C1810"
-MUT     = "#9A7060"
-SUCCESS = "#5C7A3E"
-WARN    = "#E8920A"
-DANGER  = "#8B2500"
+# ── Paleta Profissional ────────────────────────────────────────────────────────
+TERRA   = "#B5451B"   # terracota refinada
+AMBER   = "#C97D2E"   # âmbar escuro
+COPPER  = "#A0522D"   # cobre
+SAND    = "#C8A882"   # areia
+CHOCO   = "#1C1C2E"   # azul-grafite escuro (sidebar)
+NAVY    = "#2E3A59"   # azul navy (acentos)
+SLATE   = "#4A5568"   # cinza slate
+SURFACE = "#FFFFFF"   # fundo branco puro
+BG      = "#FFFFFF"   # background branco
+CARD    = "#FFFFFF"   # cards brancos
+BORDER  = "#E2E8F0"   # bordas cinza claro
+TEXT    = "#1A202C"   # texto escuro
+MUT     = "#718096"   # texto mutado
+SUCCESS = "#276749"
+WARN    = "#C05621"
+DANGER  = "#9B2335"
 
-SEQ = [TERRA, AMBER, COPPER, SAND, SADDLE, GOLD, "#C9956B", "#A0522D", "#D4C0A8", "#6B3A1F"]
+SEQ = [TERRA, AMBER, NAVY, COPPER, SLATE, SAND, "#6B7280", "#374151", "#C8A882", "#2E3A59"]
 
 _BASE = dict(
     plot_bgcolor=SURFACE,
@@ -40,8 +40,8 @@ _BASE = dict(
     legend=dict(bgcolor="rgba(0,0,0,0)", borderwidth=0, font=dict(size=11)),
 )
 CL  = {**_BASE,
-       "xaxis": dict(gridcolor="#F5EAE0", linecolor=PEACH, tickfont=dict(size=11)),
-       "yaxis": dict(gridcolor="#F5EAE0", linecolor=PEACH, tickfont=dict(size=11))}
+       "xaxis": dict(gridcolor="#F1F5F9", linecolor=BORDER, tickfont=dict(size=11)),
+       "yaxis": dict(gridcolor="#F1F5F9", linecolor=BORDER, tickfont=dict(size=11))}
 CLP = dict(**_BASE)   # pie / donut
 
 # ── Page config ────────────────────────────────────────────────────────────────
@@ -58,20 +58,20 @@ st.markdown(f"""
 
 html, body, [class*="css"], .stApp {{
     font-family: 'Inter', sans-serif !important;
-    background-color: {IVORY} !important;
+    background-color: {BG} !important;
 }}
-[data-testid="stAppViewContainer"] > .main {{ background-color:{IVORY}; }}
+[data-testid="stAppViewContainer"] > .main {{ background-color:{BG}; }}
 [data-testid="stHeader"] {{ background:transparent; }}
 
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {{
     background-color:{CHOCO} !important;
-    border-right:1px solid #2A1008;
+    border-right:1px solid #13131F;
 }}
-[data-testid="stSidebar"] * {{ color:{PEACH} !important; }}
-[data-testid="stSidebar"] h2,[data-testid="stSidebar"] h3 {{ color:{SAND} !important; }}
+[data-testid="stSidebar"] * {{ color:#CBD5E1 !important; }}
+[data-testid="stSidebar"] h2,[data-testid="stSidebar"] h3 {{ color:#F1F5F9 !important; }}
 [data-testid="stSidebar"] [data-baseweb="select"] > div {{
-    background-color:#4A2810 !important; border-color:#6B3A20 !important;
+    background-color:#2D2D45 !important; border-color:#3D3D5C !important;
 }}
 [data-testid="stSidebar"] .stButton > button {{
     background:linear-gradient(135deg,{TERRA},{AMBER}) !important;
@@ -79,62 +79,63 @@ html, body, [class*="css"], .stApp {{
     border-radius:8px !important; font-weight:600 !important;
 }}
 [data-testid="stSidebar"] [data-testid="stFileUploader"] {{
-    background:#4A2810 !important; border:1px dashed #6B3A20 !important;
+    background:#2D2D45 !important; border:1px dashed #4A4A6A !important;
     border-radius:10px !important;
 }}
 
 /* ── KPI card ── */
-.kpi {{ background:{SURFACE}; border-radius:16px; padding:20px 22px;
-    box-shadow:0 2px 20px rgba(196,82,42,.10),0 1px 4px rgba(0,0,0,.04);
-    border:1px solid rgba(212,165,116,.35); margin-bottom:12px;
+.kpi {{ background:{CARD}; border-radius:12px; padding:20px 22px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    border:1px solid {BORDER}; margin-bottom:12px;
     position:relative; overflow:hidden; }}
 .kpi::before {{ content:''; position:absolute; top:0;left:0;right:0;
     height:3px; background:linear-gradient(90deg,{TERRA},{AMBER}); }}
-.kpi.warn::before   {{ background:linear-gradient(90deg,{WARN},{GOLD}); }}
-.kpi.alert::before  {{ background:linear-gradient(90deg,{DANGER},{TERRA}); }}
-.kpi.success::before{{ background:linear-gradient(90deg,{SUCCESS},{AMBER}); }}
-.kpi.copper::before {{ background:linear-gradient(90deg,{COPPER},{SAND}); }}
-.kpi-icon  {{ font-size:1.5rem; margin-bottom:8px; display:block; }}
+.kpi.warn::before   {{ background:linear-gradient(90deg,#DD6B20,#ED8936); }}
+.kpi.alert::before  {{ background:linear-gradient(90deg,{DANGER},#E53E3E); }}
+.kpi.success::before{{ background:linear-gradient(90deg,{SUCCESS},#48BB78); }}
+.kpi.copper::before {{ background:linear-gradient(90deg,{NAVY},{SLATE}); }}
+.kpi-icon  {{ font-size:1.4rem; margin-bottom:8px; display:block; }}
 .kpi-label {{ font-size:.67rem; color:{MUT}; text-transform:uppercase;
     letter-spacing:1.5px; font-weight:600; margin-bottom:5px; }}
-.kpi-val   {{ font-size:1.9rem; font-weight:700; color:{CHOCO}; line-height:1.1; }}
+.kpi-val   {{ font-size:1.9rem; font-weight:700; color:{TEXT}; line-height:1.1; }}
 .kpi-sub   {{ font-size:.71rem; color:{MUT}; margin-top:4px; }}
 
 /* ── Header ── */
-.header {{ background:{SURFACE}; border-radius:16px; padding:22px 28px;
-    border:1px solid rgba(212,165,116,.3);
-    box-shadow:0 2px 16px rgba(196,82,42,.07); margin-bottom:20px; }}
-.brand  {{ font-size:1.6rem; font-weight:700; color:{CHOCO}; letter-spacing:-.3px; }}
+.header {{ background:{CARD}; border-radius:12px; padding:22px 28px;
+    border:1px solid {BORDER};
+    box-shadow:0 1px 3px rgba(0,0,0,.05); margin-bottom:20px; }}
+.brand  {{ font-size:1.6rem; font-weight:700; color:{TEXT}; letter-spacing:-.3px; }}
 .brand-dot {{ display:inline-block; width:10px; height:10px; border-radius:50%;
-    background:linear-gradient(135deg,{TERRA},{GOLD}); margin-right:6px; }}
+    background:linear-gradient(135deg,{TERRA},{AMBER}); margin-right:8px; }}
 .brand-sub {{ font-size:.78rem; color:{MUT}; text-transform:uppercase; letter-spacing:.6px; }}
 
 /* ── Section title ── */
-.sec {{ font-size:1rem; font-weight:600; color:{TERRA};
-    border-left:3px solid {AMBER}; padding-left:10px;
+.sec {{ font-size:.95rem; font-weight:600; color:{TEXT};
+    border-left:3px solid {TERRA}; padding-left:10px;
     margin:24px 0 14px 0; }}
 
 /* ── Alert box ── */
-.alert-box {{ background:#FDF0E8; border-radius:12px; padding:16px 18px;
-    border-left:4px solid {TERRA}; margin-bottom:8px; }}
-.alert-title {{ font-weight:600; color:{TERRA}; font-size:.85rem; }}
+.alert-box {{ background:#FFF5F5; border-radius:8px; padding:14px 16px;
+    border-left:3px solid {DANGER}; margin-bottom:8px; }}
+.alert-title {{ font-weight:600; color:{DANGER}; font-size:.85rem; }}
 .alert-sub   {{ color:{MUT}; font-size:.78rem; margin-top:3px; }}
 
 /* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] {{
-    background:{SURFACE}; border-radius:14px; padding:5px; gap:4px;
-    box-shadow:0 1px 8px rgba(196,82,42,.08);
-    border:1px solid rgba(212,165,116,.3);
+    background:#F8FAFC; border-radius:10px; padding:4px; gap:3px;
+    box-shadow:none; border:1px solid {BORDER};
 }}
 .stTabs [data-baseweb="tab"] {{
-    border-radius:10px; padding:8px 20px; font-weight:500;
+    border-radius:8px; padding:8px 20px; font-weight:500;
     color:{MUT}; font-size:.87rem; border:none !important;
+    transition: all .15s ease;
 }}
 .stTabs [aria-selected="true"] {{
-    background:linear-gradient(135deg,{TERRA},{AMBER}) !important;
-    color:white !important; box-shadow:0 2px 8px rgba(196,82,42,.35) !important;
+    background:{TERRA} !important;
+    color:white !important; box-shadow:0 2px 6px rgba(181,69,27,.3) !important;
+    font-weight:600 !important;
 }}
-hr {{ border-color:rgba(212,165,116,.3) !important; margin:12px 0 !important; }}
+hr {{ border-color:{BORDER} !important; margin:16px 0 !important; }}
 </style>
 """, unsafe_allow_html=True)
 
