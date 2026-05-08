@@ -391,7 +391,7 @@ with tab1:
         fig = px.bar(top_mod.sort_values("Estoque"), x="Estoque", y="Mod",
                      orientation="h", labels={"Estoque":"Unidades","Mod":""},
                      color="Estoque",
-                     color_continuous_scale=[[0,PEACH],[0.5,AMBER],[1,TERRA]])
+                     color_continuous_scale=[[0,"#F0E6DC"],[0.5,AMBER],[1,TERRA]])
         fig.update_layout(**CL, coloraxis_showscale=False,
                           height=480, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
@@ -420,7 +420,7 @@ with tab1:
         fig = px.bar(by_cor, x="Estoque", y="Cor", orientation="h",
                      labels={"Estoque":"Unidades","Cor":""},
                      color="Estoque",
-                     color_continuous_scale=[[0,PEACH],[0.5,COPPER],[1,TERRA]])
+                     color_continuous_scale=[[0,"#F0E6DC"],[0.5,COPPER],[1,TERRA]])
         fig.update_layout(**CL, coloraxis_showscale=False,
                           height=380, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
@@ -492,7 +492,7 @@ with tab2:
             fig = px.bar(zer_mod.sort_values("SKUs Zerados"),
                          x="SKUs Zerados", y="Mod", orientation="h",
                          color="SKUs Zerados",
-                         color_continuous_scale=[[0,PEACH],[1,DANGER]],
+                         color_continuous_scale=[[0,"#F0E6DC"],[1,DANGER]],
                          labels={"Mod":""})
             fig.update_layout(**CL, coloraxis_showscale=False,
                               height=420, margin=dict(t=10,b=10))
@@ -616,7 +616,7 @@ with tab3:
         top20c = heat.groupby("Cor")["Qtd_Costuradas"].sum().nlargest(18).index
         pivot = pivot.loc[pivot.index.isin(top20c)]
         fig = px.imshow(pivot, text_auto=True, aspect="auto",
-                        color_continuous_scale=[[0,PEACH],[0.5,AMBER],[1,TERRA]],
+                        color_continuous_scale=[[0,"#F0E6DC"],[0.5,AMBER],[1,TERRA]],
                         labels=dict(x="Tecido", y="Cor", color="Capas"))
         fig.update_layout(**CLP, height=380, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
@@ -692,7 +692,7 @@ with tab4:
         fig = px.bar(top20.sort_values("Total_Mes"), x="Total_Mes", y="SKU",
                      orientation="h", labels={"Total_Mes":"Unidades","SKU":""},
                      color="Total_Mes",
-                     color_continuous_scale=[[0,PEACH],[0.5,AMBER],[1,TERRA]])
+                     color_continuous_scale=[[0,"#F0E6DC"],[0.5,AMBER],[1,TERRA]])
         fig.update_layout(**CL, coloraxis_showscale=False, height=420, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
 
