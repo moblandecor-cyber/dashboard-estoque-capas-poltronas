@@ -523,6 +523,88 @@ with tab2:
                           xaxis_tickangle=-35, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
 
+    # ── Estoque por Modelo e Cor (Avulso + Kit)
+    sec("🎨 Estoque por Modelo e Cor — Avulso vs Kit 2")
+
+    col_mv1, col_mv2 = st.columns(2)
+
+    with col_mv1:
+        st.markdown("**Avulso — Heatmap Modelo × Cor**")
+        av_mc = (fav[fav["Cor"].str.len() > 2]
+                 .groupby(["Modelo","Cor"])["Estoque"].sum().reset_index())
+        av_mc["Mod"] = av_mc["Modelo"].apply(short)
+        top_cores_av = av_mc.groupby("Cor")["Estoque"].sum().nlargest(12).index
+        av_mc2 = av_mc[av_mc["Cor"].isin(top_cores_av)]
+        pivot_av = av_mc2.pivot_table(index="Mod", columns="Cor",
+                                       values="Estoque", aggfunc="sum").fillna(0)
+        fig = px.imshow(pivot_av, text_auto=True, aspect="auto",
+                        color_continuous_scale=[[0,"#F8FAFC"],[0.4,"#F0E6DC"],
+                                                [0.7,AMBER],[1,TERRA]],
+                        labels=dict(x="Cor", y="Modelo", color="Un."))
+        fig.update_layout(**CLP, height=420,
+                          margin=dict(t=10,b=10,l=10,r=10),
+                          coloraxis_showscale=True)
+        fig.update_xaxes(tickangle=-40, tickfont=dict(size=10))
+        fig.update_yaxes(tickfont=dict(size=10))
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col_mv2:
+        st.markdown("**Kit 2 — Heatmap Modelo × Cor**")
+        kt_mc = (fkt[fkt["Cor"].str.len() > 2]
+                 .groupby(["Modelo","Cor"])["Estoque"].sum().reset_index())
+        kt_mc["Mod"] = kt_mc["Modelo"].apply(short)
+        top_cores_kt = kt_mc.groupby("Cor")["Estoque"].sum().nlargest(12).index
+        kt_mc2 = kt_mc[kt_mc["Cor"].isin(top_cores_kt)]
+        pivot_kt = kt_mc2.pivot_table(index="Mod", columns="Cor",
+                                       values="Estoque", aggfunc="sum").fillna(0)
+        fig = px.imshow(pivot_kt, text_auto=True, aspect="auto",
+                        color_continuous_scale=[[0,"#F8FAFC"],[0.4,"#E8EDF5"],
+                                                [0.7,NAVY],[1,CHOCO]],
+                        labels=dict(x="Cor", y="Modelo", color="Un."))
+        fig.update_layout(**CLP, height=420,
+                          margin=dict(t=10,b=10,l=10,r=10),
+                          coloraxis_showscale=True)
+        fig.update_xaxes(tickangle=-40, tickfont=dict(size=10))
+        fig.update_yaxes(tickfont=dict(size=10))
+        st.plotly_chart(fig, use_container_width=True)
+
+    # ── Comparativo Avulso vs Kit por Modelo
+    sec("📊 Comparativo Avulso vs Kit 2 por Modelo")
+    av_mod = fav.groupby("Modelo")["Estoque"].sum().reset_index().rename(columns={"Estoque":"Avulso"})
+    kt_mod = fkt.groupby("Modelo")["Estoque"].sum().reset_index().rename(columns={"Estoque":"Kit 2"})
+    comp = av_mod.merge(kt_mod, on="Modelo", how="outer").fillna(0)
+    comp["Total"] = comp["Avulso"] + comp["Kit 2"]
+    comp = comp[comp["Total"] > 0].sort_values("Total", ascending=False).head(25)
+    comp["Mod"] = comp["Modelo"].apply(short)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(name="Avulso", x=comp["Mod"], y=comp["Avulso"],
+                         marker_color=TERRA, marker_line_width=0))
+    fig.add_trace(go.Bar(name="Kit 2",  x=comp["Mod"], y=comp["Kit 2"],
+                         marker_color=NAVY, marker_line_width=0))
+    fig.update_layout(**CL, barmode="stack", height=320,
+                      xaxis_tickangle=-40, margin=dict(t=10,b=10))
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ── Tabela detalhada Modelo + Cor
+    sec("📋 Tabela Detalhada — Estoque por Modelo e Cor")
+    tab_sel = st.radio("Ver:", ["Avulso", "Kit 2", "Ambos"], horizontal=True, label_visibility="collapsed")
+    if tab_sel == "Avulso":
+        df_det = fav[["Modelo","Categoria","Cor","Tecido","Estoque","Minimo","Status_Clean"]].copy()
+    elif tab_sel == "Kit 2":
+        df_det = fkt[["Modelo","Categoria","Cor","Tecido","Estoque","Minimo","Status_Clean"]].copy()
+    else:
+        df_av_t = fav[["Modelo","Categoria","Cor","Tecido","Estoque","Minimo","Status_Clean"]].copy()
+        df_av_t.insert(0, "Tipo", "Avulso")
+        df_kt_t = fkt[["Modelo","Categoria","Cor","Tecido","Estoque","Minimo","Status_Clean"]].copy()
+        df_kt_t.insert(0, "Tipo", "Kit 2")
+        df_det = pd.concat([df_av_t, df_kt_t], ignore_index=True)
+    df_det = df_det.sort_values(["Modelo","Cor"])
+    df_det.columns = [c.replace("Status_Clean","Status").replace("Minimo","Mínimo") for c in df_det.columns]
+    st.dataframe(df_det, use_container_width=True, hide_index=True, height=380)
+    csv = df_det.to_csv(index=False).encode("utf-8-sig")
+    st.download_button("⬇️ Exportar CSV", csv, "estoque_modelo_cor.csv", "text/csv")
+
+    st.markdown("---")
     # ── Estoque completo avulso
     sec("📋 Estoque Completo – Produtos Avulsos")
     tbl_av = fav[["Modelo","Categoria","Tecido","Cor","Curva_ABC","Estoque","Minimo","Ideal","Status_Clean"]].copy()
