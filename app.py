@@ -217,7 +217,7 @@ def load_data(file_source):
     df_av["Status_Clean"] = df_av["Status"].apply(s_est)
 
     # Kit
-    df_kt = xl.parse("Estoque - Kit 2", header=3)
+    df_kt = xl.parse("Estoque - Kit ", header=3)
     if len(df_kt.columns) == 11:
         df_kt.columns = ["Modelo","Tecido","Cor","Curva_ABC","Obs","Estoque","Minimo","Ideal","A_Produzir","Status","Obs_Geral"]
     else:
