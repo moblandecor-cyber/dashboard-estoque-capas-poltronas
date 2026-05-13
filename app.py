@@ -516,12 +516,18 @@ with tab2:
 
     STATUS_COR = {"Zerado": C_ZERO, "Crítico": C_CRIT, "Baixo": C_BAIXO, "OK": C_OK}
 
-    modelos_uniq = sorted(fav["Modelo"].dropna().unique())
+    # Unir avulso + kit com coluna Tipo
+    fav_t = fav.copy(); fav_t["Tipo"] = "Avulso"
+    fkt_t = fkt.copy(); fkt_t["Tipo"] = "Kit"
+    df_todos = pd.concat([fav_t, fkt_t], ignore_index=True)
+    modelos_uniq = sorted(df_todos["Modelo"].dropna().unique())
+
     for modelo in modelos_uniq:
-        df_m = fav[fav["Modelo"] == modelo].copy()
+        df_m = df_todos[df_todos["Modelo"] == modelo].copy()
         df_m = df_m[df_m["Cor"].str.len() > 1].sort_values("Cor")
         if df_m.empty: continue
         df_m["cor_status"] = df_m["Status_SKU"].map(STATUS_COR)
+        tipo_label = df_m["Tipo"].iloc[0]
         fig = go.Figure(go.Bar(
             x=df_m["Cor"], y=df_m["Estoque"],
             marker_color=df_m["cor_status"],
@@ -529,7 +535,9 @@ with tab2:
             hovertemplate="<b>%{x}</b><br>Estoque: %{y}<extra></extra>"
         ))
         fig.update_layout(**CL, height=180, showlegend=False,
-                          title=dict(text=f"<b>{modelo}</b>", font=dict(size=13), x=0),
+                          title=dict(
+                              text=f"<b>{modelo}</b>  <span style='font-size:11px;color:#718096'>({tipo_label})</span>",
+                              font=dict(size=13), x=0),
                           margin=dict(t=35,b=10,l=10,r=10))
         fig.update_yaxes(range=[0, df_m["Estoque"].max()*1.3+1], tickfont=dict(size=10))
         fig.update_xaxes(tickfont=dict(size=10))
