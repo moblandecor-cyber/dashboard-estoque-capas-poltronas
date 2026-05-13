@@ -530,10 +530,9 @@ with tab2:
         ))
         fig.update_layout(**CL, height=180, showlegend=False,
                           title=dict(text=f"<b>{modelo}</b>", font=dict(size=13), x=0),
-                          margin=dict(t=35,b=10,l=10,r=10),
-                          yaxis=dict(gridcolor="#F1F5F9", linecolor=BORDER,
-                                     tickfont=dict(size=10), range=[0, df_m["Estoque"].max()*1.3+1]),
-                          xaxis=dict(gridcolor="#F1F5F9", linecolor=BORDER, tickfont=dict(size=10)))
+                          margin=dict(t=35,b=10,l=10,r=10))
+        fig.update_yaxes(range=[0, df_m["Estoque"].max()*1.3+1], tickfont=dict(size=10))
+        fig.update_xaxes(tickfont=dict(size=10))
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
