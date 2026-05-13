@@ -13,22 +13,26 @@ GSHEETS_ID         = "1zP5wU3VvJxH7X-y3zeleUNOaOT2URTDswxoIJjbny08"
 GSHEETS_EXPORT_URL = f"https://docs.google.com/spreadsheets/d/{GSHEETS_ID}/export?format=xlsx"
 
 # ── Paleta Profissional ────────────────────────────────────────────────────────
-TERRA   = "#B5451B"   # terracota refinada
-AMBER   = "#C97D2E"   # âmbar escuro
+TERRA   = "#B5451B"   # terracota
+AMBER   = "#C97D2E"   # âmbar
 COPPER  = "#A0522D"   # cobre
 SAND    = "#C8A882"   # areia
-CHOCO   = "#1C1C2E"   # azul-grafite escuro (sidebar)
-NAVY    = "#2E3A59"   # azul navy (acentos)
+NAVY    = "#2E3A59"   # azul navy
 SLATE   = "#4A5568"   # cinza slate
-SURFACE = "#FFFFFF"   # fundo branco puro
-BG      = "#FFFFFF"   # background branco
-CARD    = "#FFFFFF"   # cards brancos
-BORDER  = "#E2E8F0"   # bordas cinza claro
-TEXT    = "#1A202C"   # texto escuro
-MUT     = "#718096"   # texto mutado
+SURFACE = "#FFFFFF"
+BG      = "#FFFFFF"
+CARD    = "#FFFFFF"
+BORDER  = "#E2E8F0"
+TEXT    = "#1A202C"
+MUT     = "#718096"
 SUCCESS = "#276749"
 WARN    = "#C05621"
 DANGER  = "#9B2335"
+# Status SKU (igual ao dashboard de referência)
+C_ZERO  = "#E53E3E"   # vermelho  – zerado
+C_CRIT  = "#DD6B20"   # laranja   – crítico (1–2 un)
+C_BAIXO = "#D69E2E"   # amarelo   – baixo
+C_OK    = "#276749"   # verde     – ok
 
 SEQ = [TERRA, AMBER, NAVY, COPPER, SLATE, SAND, "#6B7280", "#374151", "#C8A882", "#2E3A59"]
 
@@ -54,7 +58,7 @@ st.set_page_config(
 
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 html, body, [class*="css"], .stApp {{
     font-family: 'Inter', sans-serif !important;
@@ -63,35 +67,53 @@ html, body, [class*="css"], .stApp {{
 [data-testid="stAppViewContainer"] > .main {{ background-color:{BG}; }}
 [data-testid="stHeader"] {{ background:transparent; }}
 
-/* ── Sidebar ── */
+/* ── Sidebar clara (estilo referência) ── */
 [data-testid="stSidebar"] {{
-    background-color:{CHOCO} !important;
-    border-right:1px solid #13131F;
+    background-color:#F8FAFC !important;
+    border-right:1px solid {BORDER};
 }}
-[data-testid="stSidebar"] * {{ color:#CBD5E1 !important; }}
-[data-testid="stSidebar"] h2,[data-testid="stSidebar"] h3 {{ color:#F1F5F9 !important; }}
-[data-testid="stSidebar"] [data-baseweb="select"] > div {{
-    background-color:#2D2D45 !important; border-color:#3D3D5C !important;
-}}
+[data-testid="stSidebar"] * {{ color:{TEXT} !important; }}
+[data-testid="stSidebar"] h2,[data-testid="stSidebar"] h3 {{ color:{TEXT} !important; font-weight:700 !important; }}
 [data-testid="stSidebar"] .stButton > button {{
-    background:linear-gradient(135deg,{TERRA},{AMBER}) !important;
-    color:white !important; border:none !important;
-    border-radius:8px !important; font-weight:600 !important;
+    background:{TERRA} !important; color:white !important;
+    border:none !important; border-radius:8px !important;
+    font-weight:600 !important; width:100%;
 }}
-[data-testid="stSidebar"] [data-testid="stFileUploader"] {{
-    background:#2D2D45 !important; border:1px dashed #4A4A6A !important;
-    border-radius:10px !important;
+[data-testid="stSidebar"] [data-baseweb="select"] > div {{
+    background-color:white !important; border-color:{BORDER} !important;
 }}
 
-/* ── KPI card ── */
+/* ── Banners de alerta (estilo referência) ── */
+.banner-zero {{
+    background:#FFF5F5; border:1px solid #FEB2B2;
+    border-radius:8px; padding:12px 18px; margin-bottom:8px;
+    display:flex; align-items:center; gap:10px;
+}}
+.banner-crit {{
+    background:#FFFAF0; border:1px solid #FBD38D;
+    border-radius:8px; padding:12px 18px; margin-bottom:8px;
+    display:flex; align-items:center; gap:10px;
+}}
+.banner-zero span {{ color:{C_ZERO}; font-weight:600; font-size:.92rem; }}
+.banner-crit span {{ color:{C_CRIT}; font-weight:600; font-size:.92rem; }}
+
+/* ── KPI flat (estilo referência) ── */
+.kpi-flat {{ padding:8px 0; }}
+.kpi-flat .kf-dot  {{ display:inline-block; width:9px; height:9px;
+    border-radius:50%; margin-right:6px; vertical-align:middle; }}
+.kpi-flat .kf-label {{ font-size:.75rem; color:{MUT}; font-weight:500; }}
+.kpi-flat .kf-val   {{ font-size:1.7rem; font-weight:700; color:{TEXT};
+    line-height:1.1; margin-top:2px; }}
+
+/* ── KPI card (mantido para uso interno) ── */
 .kpi {{ background:{CARD}; border-radius:12px; padding:20px 22px;
-    box-shadow:0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
     border:1px solid {BORDER}; margin-bottom:12px;
     position:relative; overflow:hidden; }}
 .kpi::before {{ content:''; position:absolute; top:0;left:0;right:0;
     height:3px; background:linear-gradient(90deg,{TERRA},{AMBER}); }}
-.kpi.warn::before   {{ background:linear-gradient(90deg,#DD6B20,#ED8936); }}
-.kpi.alert::before  {{ background:linear-gradient(90deg,{DANGER},#E53E3E); }}
+.kpi.warn::before   {{ background:linear-gradient(90deg,{C_CRIT},#ED8936); }}
+.kpi.alert::before  {{ background:linear-gradient(90deg,{C_ZERO},#FC8181); }}
 .kpi.success::before{{ background:linear-gradient(90deg,{SUCCESS},#48BB78); }}
 .kpi.copper::before {{ background:linear-gradient(90deg,{NAVY},{SLATE}); }}
 .kpi-icon  {{ font-size:1.4rem; margin-bottom:8px; display:block; }}
@@ -100,40 +122,34 @@ html, body, [class*="css"], .stApp {{
 .kpi-val   {{ font-size:1.9rem; font-weight:700; color:{TEXT}; line-height:1.1; }}
 .kpi-sub   {{ font-size:.71rem; color:{MUT}; margin-top:4px; }}
 
-/* ── Header ── */
-.header {{ background:{CARD}; border-radius:12px; padding:22px 28px;
-    border:1px solid {BORDER};
-    box-shadow:0 1px 3px rgba(0,0,0,.05); margin-bottom:20px; }}
-.brand  {{ font-size:1.6rem; font-weight:700; color:{TEXT}; letter-spacing:-.3px; }}
-.brand-dot {{ display:inline-block; width:10px; height:10px; border-radius:50%;
-    background:linear-gradient(135deg,{TERRA},{AMBER}); margin-right:8px; }}
-.brand-sub {{ font-size:.78rem; color:{MUT}; text-transform:uppercase; letter-spacing:.6px; }}
+/* ── Header grande (estilo referência) ── */
+.page-title {{ font-size:2rem; font-weight:800; color:{TEXT};
+    letter-spacing:-.5px; margin-bottom:4px; }}
+.page-sub   {{ font-size:.8rem; color:{MUT}; margin-bottom:20px; }}
 
 /* ── Section title ── */
-.sec {{ font-size:.95rem; font-weight:600; color:{TEXT};
-    border-left:3px solid {TERRA}; padding-left:10px;
+.sec {{ font-size:1.05rem; font-weight:700; color:{TEXT};
+    display:flex; align-items:center; gap:8px;
     margin:24px 0 14px 0; }}
 
-/* ── Alert box ── */
-.alert-box {{ background:#FFF5F5; border-radius:8px; padding:14px 16px;
-    border-left:3px solid {DANGER}; margin-bottom:8px; }}
-.alert-title {{ font-weight:600; color:{DANGER}; font-size:.85rem; }}
-.alert-sub   {{ color:{MUT}; font-size:.78rem; margin-top:3px; }}
+/* ── Status dot inline ── */
+.dot-zero  {{ color:{C_ZERO};  font-weight:700; }}
+.dot-crit  {{ color:{C_CRIT};  font-weight:700; }}
+.dot-baixo {{ color:{C_BAIXO}; font-weight:700; }}
+.dot-ok    {{ color:{C_OK};    font-weight:700; }}
 
 /* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] {{
     background:#F8FAFC; border-radius:10px; padding:4px; gap:3px;
-    box-shadow:none; border:1px solid {BORDER};
+    border:1px solid {BORDER};
 }}
 .stTabs [data-baseweb="tab"] {{
     border-radius:8px; padding:8px 20px; font-weight:500;
     color:{MUT}; font-size:.87rem; border:none !important;
-    transition: all .15s ease;
 }}
 .stTabs [aria-selected="true"] {{
-    background:{TERRA} !important;
-    color:white !important; box-shadow:0 2px 6px rgba(181,69,27,.3) !important;
-    font-weight:600 !important;
+    background:{TERRA} !important; color:white !important;
+    box-shadow:0 2px 6px rgba(181,69,27,.3) !important; font-weight:600 !important;
 }}
 hr {{ border-color:{BORDER} !important; margin:16px 0 !important; }}
 </style>
@@ -329,7 +345,9 @@ tot_prod    = tot_av + tot_kit
 tot_cap     = int(fc["Qtd_Costuradas"].sum())
 skus_av     = len(fav)
 skus_zero   = int((fav["Estoque"] == 0).sum())
+skus_critico= int((fav["Estoque"].between(1, 2)).sum())
 skus_baixo  = int((fav["Estoque"].between(1, LIMIAR_BAIXO - 1)).sum())
+skus_ok     = int((fav["Estoque"] >= LIMIAR_BAIXO).sum())
 skus_parado = int((fav["Estoque"] >= LIMIAR_PARADO).sum())
 n_skus      = fav["Modelo"].nunique()
 taxa_rupt   = skus_zero / skus_av * 100 if skus_av else 0
@@ -340,17 +358,57 @@ alertas_k   = int((fkt["Status_Clean"] != "OK").sum())
 tot_vend    = int(fv["Total_Mes"].sum())
 giro        = round(tot_vend / tot_av, 1) if tot_av > 0 else 0
 
+# Classificar status de cada SKU
+def classify_sku(est):
+    if est == 0:             return "Zerado"
+    if est <= 2:             return "Crítico"
+    if est < LIMIAR_BAIXO:   return "Baixo"
+    return "OK"
+fav["Status_SKU"] = fav["Estoque"].apply(classify_sku)
+fkt["Status_SKU"] = fkt["Estoque"].apply(classify_sku)
 
-# ── Header ────────────────────────────────────────────────────────────────────
+
+# ── Header grande (estilo referência) ────────────────────────────────────────
 st.markdown(f"""
-<div class="header">
-    <div>
-        <div class="brand"><span class="brand-dot"></span>MOBLAN Decor</div>
-        <div class="brand-sub">Painel de Gestão · Estoque & Produção · Maio 2026</div>
-    </div>
-</div>""", unsafe_allow_html=True)
+<p class="page-title">📦 Dashboard de Estoque — Capas & Produtos</p>
+<p class="page-sub">MOBLAN Decor · Gestão em Tempo Real · Estoque & Produção · Maio 2026</p>
+""", unsafe_allow_html=True)
 
-# ── KPI Linha 1 – Produtos ────────────────────────────────────────────────────
+st.markdown("<hr>", unsafe_allow_html=True)
+
+# ── Banners de alerta (estilo referência) ─────────────────────────────────────
+if skus_zero > 0:
+    st.markdown(f"""
+    <div class="banner-zero">
+        <span>● {skus_zero} variação(ões) com ESTOQUE ZERADO</span>
+    </div>""", unsafe_allow_html=True)
+if skus_critico > 0:
+    st.markdown(f"""
+    <div class="banner-crit">
+        <span>● {skus_critico} variação(ões) com ESTOQUE CRÍTICO (1–2 un.)</span>
+    </div>""", unsafe_allow_html=True)
+
+# ── KPI planos (estilo referência) ───────────────────────────────────────────
+kf = st.columns(6)
+def kpi_flat(col, dot_color, label, value):
+    col.markdown(f"""
+    <div class="kpi-flat">
+        <div class="kf-label">
+            <span class="kf-dot" style="background:{dot_color}"></span>{label}
+        </div>
+        <div class="kf-val">{value}</div>
+    </div>""", unsafe_allow_html=True)
+
+kpi_flat(kf[0], TERRA,    "Total de itens",    f"{tot_prod:,}")
+kpi_flat(kf[1], AMBER,    "Variações (avulso)", f"{skus_av:,}")
+kpi_flat(kf[2], C_OK,     f"OK (≥{LIMIAR_BAIXO})", f"{skus_ok}")
+kpi_flat(kf[3], C_BAIXO,  f"Baixo (3–{LIMIAR_BAIXO})", f"{skus_baixo}")
+kpi_flat(kf[4], C_ZERO,   "Zerado / Crítico",  f"{skus_zero} / {skus_critico}")
+kpi_flat(kf[5], NAVY,     "Vendas Abril",       f"{tot_vend:,}")
+
+st.markdown("<hr>", unsafe_allow_html=True)
+
+# ── KPI Linha cards – Produtos ────────────────────────────────────────────────
 c = st.columns(5)
 with c[0]: kpi("🛋️", "Total Produtos em Estoque", f"{tot_prod:,}", f"Avulso: {tot_av:,}  |  Kit: {tot_kit:,}")
 with c[1]: kpi("🧵", "Total Capas Costuradas",    f"{tot_cap:,}", f"{cap_prod} a produzir", "copper")
@@ -451,6 +509,57 @@ with tab1:
 # TAB 2 – PRODUTOS ACABADOS
 # ─────────────────────────────────────────────────────────────────────────────
 with tab2:
+
+    # ── Gráfico Estoque por Modelo e Cor colorido por Status (estilo referência)
+    sec("📊 Estoque por Produto e Cor")
+    st.caption("🔴 Zerado  🟠 Crítico (1–2 un.)  🟡 Baixo  🟢 OK")
+
+    STATUS_COR = {"Zerado": C_ZERO, "Crítico": C_CRIT, "Baixo": C_BAIXO, "OK": C_OK}
+
+    modelos_uniq = sorted(fav["Modelo"].dropna().unique())
+    for modelo in modelos_uniq:
+        df_m = fav[fav["Modelo"] == modelo].copy()
+        df_m = df_m[df_m["Cor"].str.len() > 1].sort_values("Cor")
+        if df_m.empty: continue
+        df_m["cor_status"] = df_m["Status_SKU"].map(STATUS_COR)
+        fig = go.Figure(go.Bar(
+            x=df_m["Cor"], y=df_m["Estoque"],
+            marker_color=df_m["cor_status"],
+            text=df_m["Estoque"], textposition="outside",
+            hovertemplate="<b>%{x}</b><br>Estoque: %{y}<extra></extra>"
+        ))
+        fig.update_layout(**CL, height=180, showlegend=False,
+                          title=dict(text=f"<b>{modelo}</b>", font=dict(size=13), x=0),
+                          margin=dict(t=35,b=10,l=10,r=10),
+                          yaxis=dict(gridcolor="#F1F5F9", linecolor=BORDER,
+                                     tickfont=dict(size=10), range=[0, df_m["Estoque"].max()*1.3+1]),
+                          xaxis=dict(gridcolor="#F1F5F9", linecolor=BORDER, tickfont=dict(size=10)))
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ── Tabelas lado a lado: Zerados/Críticos | Estoque Baixo (estilo referência)
+    tz, tb = st.columns(2)
+
+    with tz:
+        sec("🔴 Zerados / 🟠 Críticos")
+        df_zc = fav[fav["Status_SKU"].isin(["Zerado","Crítico"])][
+            ["Modelo","Cor","Estoque","Status_SKU"]].copy()
+        df_zc = df_zc.sort_values(["Status_SKU","Modelo"])
+        df_zc.columns = ["Produto","Cor","Estoque","Status"]
+        st.dataframe(df_zc, use_container_width=True, hide_index=True, height=350)
+        st.caption(f"Total: {len(df_zc)} variações")
+
+    with tb:
+        sec(f"🟡 Estoque Baixo (3–{LIMIAR_BAIXO} un.)")
+        df_bx = fav[fav["Status_SKU"] == "Baixo"][
+            ["Modelo","Cor","Estoque","Status_SKU"]].copy()
+        df_bx = df_bx.sort_values("Estoque")
+        df_bx.columns = ["Produto","Cor","Estoque","Status"]
+        st.dataframe(df_bx, use_container_width=True, hide_index=True, height=350)
+        st.caption(f"Total: {len(df_bx)} variações")
+
+    st.markdown("---")
 
     # ── Estoque baixo
     sec(f"🟠 Produtos com Estoque Baixo (< {LIMIAR_BAIXO} un)")
