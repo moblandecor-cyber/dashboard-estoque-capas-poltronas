@@ -667,7 +667,7 @@ with tab2:
                                        values="Estoque", aggfunc="sum").fillna(0)
         fig = px.imshow(pivot_kt, text_auto=True, aspect="auto",
                         color_continuous_scale=[[0,"#F8FAFC"],[0.4,"#E8EDF5"],
-                                                [0.7,NAVY],[1,CHOCO]],
+                                                [0.7,NAVY],[1,"#1C1C2E"]],
                         labels=dict(x="Cor", y="Modelo", color="Un."))
         fig.update_layout(**CLP, height=420,
                           margin=dict(t=10,b=10,l=10,r=10),
@@ -754,7 +754,7 @@ with tab3:
         fig.add_trace(go.Bar(name="A Produzir", x=ms["Mod"], y=ms["A_Produzir"],
                              marker_color=DANGER, marker_line_width=0))
         fig.add_trace(go.Scatter(name="Qtd Mínima", x=ms["Mod"], y=ms["Minima"],
-                                 mode="markers", marker=dict(color=CHOCO, size=9, symbol="diamond")))
+                                 mode="markers", marker=dict(color="#1C1C2E", size=9, symbol="diamond")))
         fig.update_layout(**CL, barmode="group", height=360,
                           xaxis_tickangle=-40, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
@@ -832,7 +832,7 @@ with tab4:
         fig.add_trace(go.Bar(name=f"Curva {curva}", x=s["Rank"], y=s["Unid_Abril"],
                              marker_color=cor, marker_line_width=0), secondary_y=False)
     fig.add_trace(go.Scatter(name="% Acumulado", x=pareto["Rank"], y=pareto["Pct_Acum"],
-                             mode="lines", line=dict(color=CHOCO, width=2.5, dash="dot")),
+                             mode="lines", line=dict(color="#1C1C2E", width=2.5, dash="dot")),
                   secondary_y=True)
     fig.update_layout(**CL, barmode="stack", height=320, margin=dict(t=10,b=10))
     fig.update_yaxes(title_text="Unidades", secondary_y=False, gridcolor="#F5EAE0")
@@ -870,7 +870,7 @@ with tab4:
                      color="Alerta",
                      color_discrete_map={"Crítico":DANGER,"Baixo":WARN,"OK":AMBER},
                      labels={"Cob":"Dias de cobertura","SKU":""})
-        fig.add_vline(x=7, line_dash="dash", line_color=CHOCO, opacity=0.4,
+        fig.add_vline(x=7, line_dash="dash", line_color="#1C1C2E", opacity=0.4,
                       annotation_text="Meta 7d")
         fig.update_layout(**CL, height=480, margin=dict(t=10,b=10))
         st.plotly_chart(fig, use_container_width=True)
